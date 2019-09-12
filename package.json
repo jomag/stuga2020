@@ -7,7 +7,7 @@
     "@types/node": "12.7.4",
     "@types/react": "16.9.2",
     "@types/react-dom": "16.9.0",
-    "bajsic": "git+https://github.com/jomag/bajsic.git",
+    "bajsic": "*",
     "eslint": "^6.3.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
