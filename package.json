@@ -7,10 +7,15 @@
     "@types/node": "12.7.4",
     "@types/react": "16.9.2",
     "@types/react-dom": "16.9.0",
+    "bajsic": "*",
+    "chalk": "^2.4.2",
+    "eslint": "^6.3.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-scripts": "3.1.1",
-    "typescript": "3.6.2"
+    "typescript": "3.6.2",
+    "xterm": "^4.3.0",
+    "xterm-addon-fit": "^0.3.0"
   },
   "scripts": {
     "start": "react-scripts start",
