@@ -185,10 +185,12 @@ class BasicTerminal {
   }
 
   open(el: HTMLDivElement) {
+    this.term.open(el);
+  }
+
+  start() {
     let chalkOptions: any = { enabled: true, level: 2 };
     const forcedChalk = new chalk.constructor(chalkOptions);
-
-    this.term.open(el);
 
     const support = {
       finalize: () => {},
