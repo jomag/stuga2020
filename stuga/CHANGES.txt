@@ -1,0 +1,31 @@
+I've tried to minimize the changes to the original file (stuga.bas) as downloaded
+from the autho, Kimmo Eriksson's homepage (www.kimmoeriksson.se). All changes
+are documented here:
+
+Character Encoding
+------------------
+
+The original seem to be encoded in ISO-646-SE. This means that swedish
+characters are displayed as "{", "}", "\", "]", etc when opened as UTF-8.
+This can easily be converted using iconv:
+
+```
+iconv -f iso-646-se -t utf-8 stuga.bas
+```
+
+But the problem is that some of these characters are used in the BASIC
+syntax, for example to separate statements on one line
+
+```
+10 PRINT "Hello" \ PRINT "World"
+```
+
+Just translating that using iconv would result in this string, which
+is not legal BASIC:
+
+```
+10 PRINT "Hello" Ö PRINT "World"
+```
+
+I found no other solution than to semi-manually replace all swedish
+characters in strings and comments. The file was then saved as UTF-8.
