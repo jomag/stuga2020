@@ -29,3 +29,10 @@ is not legal BASIC:
 
 I found no other solution than to semi-manually replace all swedish
 characters in strings and comments. The file was then saved as UTF-8.
+
+Change end of line
+------------------
+
+Original had Window style CR+LF line ending. This has been changed
+to Unix style (LF only).
+
