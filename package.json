@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "cp stuga/stuga.bas public/stuga.bas && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
