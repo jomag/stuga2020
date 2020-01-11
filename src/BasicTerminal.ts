@@ -178,8 +178,6 @@ class BasicTerminal {
             cursor += data.length;
             break;
         }
-
-        console.log(`New input: length=${data.length} code=${code} buf=${buf}`);
       });
     });
   }
@@ -223,7 +221,10 @@ class BasicTerminal {
       .then((r: any) => {
         this.program = parse(r);
       })
-      .then(() => shell(this.program!, this.context!));
+      .then(() => shell(this.program!, this.context!))
+      .catch((e: Error) => {
+        support.printError(e.toString());
+      });
   }
 }
 
