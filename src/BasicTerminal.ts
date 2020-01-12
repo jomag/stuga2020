@@ -10,6 +10,7 @@ import {
   BaseSupport,
 } from 'bajsic';
 import chalk from 'chalk';
+import 'xterm/css/xterm.css';
 
 type BasicTerminalOptions = {
   cols: number;
@@ -40,7 +41,7 @@ class BasicTerminal {
       cursorBlink: true,
       cursorStyle: 'underline',
       fontFamily: 'Px437 IBM EGA8',
-      fontSize: 18,
+      fontSize: 16,
       // lineHeight: 0.95,
       rendererType: 'canvas',
       theme: {
