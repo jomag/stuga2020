@@ -1,0 +1,59 @@
+[?7h[255D[40m
+
+
+[0;1m[7C[30m─ ─────[0;31m─[1;30m─[0;31m─────[1m─[0;31m─[1m─────[33m─[31m─[33m─────[37m─[33m─[37m──────[33m─[37m─[33m─────[31m─[33m─[31m─────[0;31m─[1m─[0;31m─────[1;30m─[0;31m─[1;30m───── ─
+
+[17C[31;41m███████[0;34m╗ [1;31;41m████████[0;34m╗ [1;31;41m██[0;34m╗   [1;31;41m██[0;34m╗  [1;31;41m██████[0;34m╗   [1;31;41m█████[0;34m╗
+[17C[1;31;41m▓▓[0;34m╔════╝ ╚══[1;31;41m▓▓[0;34m╔══╝ [1;31;41m▓▓[0;34m║   [1;31;41m▓▓[0;34m║ [1;31;41m▓▓[0;34m╔════╝  [1;31;41m▓▓[0;34m╔══[1;31;41m▓▓[0;34m╗
+[17C[1;31;41m▒▒▒▒▒▒▒[0;34m╗    [1;31;41m▒▒[0;34m║    [1;31;41m▒▒[0;34m║   [1;31;41m▒▒[0;34m║ [1;31;41m▒▒[0;34m║  [1;31;41m▒▒▒[0;34m╗ [1;31;41m▒▒▒▒▒▒▒[0;34m║
+[17C╚════[1;31;41m░░[0;34m║    [1;31;41m░░[0;34m║    [1;31;41m░░[0;34m║   [1;31;41m░░[0;34m║ [1;31;41m░░[0;34m║   [1;31;41m░░[0;34m║ [1;31;41m░░[0;34m╔══[1;31;41m░░[0;34m║
+[17C[31m███████[34m║    [31m██[34m║    ╚[31m██████[34m╔╝ ╚[31m██████[34m╔╝ [31m██[34m║  [31m██[34m║
+[17C╚══════╝    ╚═╝[5C╚═════╝   ╚═════╝  ╚═╝  ╚═╝
+[22C[44m    [1m░░[0;34m╗   [1;44m▒▒▓▓▓▓[0;34m╗  [1;44m▓▓▓▓▓▓[0;34m╗   [1;44m▒▒▒░░░[0;34m╗
+[22C╚════[1;44m▒▒[0;34m╗ [1;44m▒▒[0;34m╔═[1;44m▒██▒[0;34m╗ ╚════[1;44m▓▓[0;34m╗ [1;44m░░[0;34m╔═[1;44m░░░░[0;34m╗
+[23C[44m   [1m░░[0;34m╔╝ [1;44m░▒[0;34m║[1;44m▒▒[0;34m╔[1;44m▓▓[0;34m║  [1;44m▓▓▓▓▒[0;34m╔╝ [1;44m▓▒[0;34m║[1;44m░░[0;34m╔[44m  [40m║
+[22C[44m  [40m╔═══╝  [1;44m▓▓▓▓[0;34m╔╝[1;44m▓▓[0;34m║ [1;44m▓▓[0;34m╔═══╝  [1;44m█▓▓▒[0;34m╔╝[44m  [40m║
+[22C[44m [1m░▒▓███[0;34m╗ ╚[1;44m██████[0;34m╔╝ [1;44m███████[0;34m╗ ╚[1;44m██▓▒░ [0;34m╔╝
+[22C╚══════╝  ╚═════╝  ╚══════╝  ╚═════╝
+[7C[1;30m─ ─────[0;31m─[1;30m─[0;31m─────[1m─[0;31m─[1m─────[33m─[31m─[33m─────[37m─[33m─[37m──────[33m─[37m─[33m─────[31m─[33m─[31m─────[0;31m─[1m─[0;31m─────[1;30m─[0;31m─[1;30m───── ─
+
+[7C[37mWelcome to the world of [36mStuga[37m! Stuga is a classic, Swedish text
+[7Cadventure game originally released in 1978. The first version of
+[7Cthe game was written in BASIC on Oden, a DEC-10 mainframe computer
+[7Cat QZ in Stockholm, Sweden. The game was later released for PC
+[7Cwith the name changed to Stugan.
+
+[7C[0mIn summer 2019 I found out that one of the original authors,
+[7CKimmo Eriksson, had found the original source code and released
+[7Cit on his homepage ([1;34mhttps://www.kimmoeriksson.se[0m). Unfortunately,
+[7CI could not find an interpreter compatible with the specific
+[7CBASIC dialect the game was written in, so I set out to write an
+[7Can interpreter in JavaScript with enough functionality to run
+[7Cthe game (how hard can it be?!).
+
+[7CSeveral months later, the interpreter is finally complete enough
+[7Cto run most of the game. I've not yet managed to play the whole
+[7Cgame through, so there might be catastrophic incompatibilities
+[7Clater in the game!
+
+[7CI've made minimal changes to the game source code. It's more or
+[7Cless only fixing what invalid line breaks, text encodings and
+[7Cvery few functions that I've still not implemented in the inter-
+[7Cpreter. These functions are mostly related to saving game state
+[7Cwhich unfortunately is not working anyway.
+
+[7CThe game source code plus this website:
+
+[7C[1;34mhttps://www.github.com/jomag/stuga2020
+
+[7C[0mThe BASIC interpreter:
+
+[7C[1;34mhttps://www.github.com/jomag/bajsic
+
+[7C[37mYou are now in the BASIC interpreter. The game has already
+[7Cbeen loaded, so go ahead and type [33mRUN [37mto start the game!
+
+[7CYou can also print the game code by typing [33mLIST[37m. You can
+[7Ceven clear the memory ([33mNEW[37m) and write your own game in BASIC!
+
+[0m[255D
