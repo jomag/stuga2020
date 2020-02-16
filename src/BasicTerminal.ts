@@ -40,7 +40,7 @@ class BasicTerminal {
       // rows,
       cursorBlink: true,
       cursorStyle: 'underline',
-      fontFamily: 'Px437 IBM EGA8',
+      fontFamily: 'px437_ibm_ega8regular',
       fontSize: 16,
       // lineHeight: 0.95,
       rendererType: 'canvas',
