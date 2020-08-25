@@ -50,6 +50,17 @@
 
 [7C[1;34mhttps://www.github.com/jomag/bajsic
 
+[7C[1;31m┌──────────────────────────────────────────────────────────┐
+[7C│ [37mPlease use ALL CAPS when playing the game![15C[31m│
+[7C│[58C│
+[7C│ [0mAll parts of the game work with capital letters, but[5C[1;31m│
+[7C│ [0monly some parts (notably while being outdoors) work with [1;31m│
+[7C│ [0mlower case. So to be safe, use caps for the entire game. [1;31m│
+[7C│[58C│
+[7C│ [30mThis is how the game was originally written, and it can  [31m│
+[7C│ [30mnot be fixed without modifying the game source code.[5C[31m│
+[7C└──────────────────────────────────────────────────────────┘
+
 [7C[37mYou are now in the BASIC interpreter. The game has already
 [7Cbeen loaded, so go ahead and type [33mRUN [37mto start the game!
 
