@@ -6,8 +6,9 @@
     "bajsic": "github:jomag/bajsic",
     "chalk": "^2.4.2",
     "typescript": "3.6.2",
-    "xterm": "^4.3.0",
-    "xterm-addon-fit": "^0.3.0"
+    "xterm": "^4.8.1",
+    "xterm-addon-fit": "^0.4.0",
+    "xterm-webfont": "^2.0.0"
   },
   "scripts": {
     "start": "webpack-dev-server --open",
