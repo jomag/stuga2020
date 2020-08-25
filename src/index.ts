@@ -39,7 +39,7 @@ const startAnimation = async (term: BasicTerminal) => {
 };
 
 const showIntroduction = async (term: BasicTerminal) => {
-  const introResponse = await fetch('/stuga.ans');
+  const introResponse = await fetch('/STUGA.ANS');
   const intro = await introResponse.text();
   await term.print(intro);
 };
@@ -47,12 +47,13 @@ const showIntroduction = async (term: BasicTerminal) => {
 document.addEventListener('DOMContentLoaded', () => {
   const root = document.getElementById('root');
   const term = new BasicTerminal({ cols: 80, rows: 25 });
-  term.open(root! as HTMLDivElement);
-  term.fit();
+  term.open(root! as HTMLDivElement).then(() => {
+    term.fit();
 
-  showIntroduction(term).then((resolve: any) => {
-    term.start();
-    resolve();
+    showIntroduction(term).then((resolve: any) => {
+      term.start();
+      resolve();
+    });
   });
 
   window.addEventListener('resize', () => term.fit());

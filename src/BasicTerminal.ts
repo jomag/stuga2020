@@ -1,4 +1,6 @@
 import { Terminal, ITerminalOptions } from 'xterm';
+import * as XtermWebfont from 'xterm-webfont';
+
 import { FitAddon } from 'xterm-addon-fit';
 import {
   Stream,
@@ -67,6 +69,7 @@ class BasicTerminal {
     this.term = new Terminal(termOptions);
     this.fitAddon = new FitAddon();
     this.term.loadAddon(this.fitAddon);
+    this.term.loadAddon(new XtermWebfont());
 
     //this.term.onData((text: string) => {
     //  this.term.write(text);
@@ -200,8 +203,8 @@ class BasicTerminal {
     });
   }
 
-  open(el: HTMLDivElement) {
-    this.term.open(el);
+  async open(el: HTMLDivElement) {
+    await (this.term as any).loadWebfontAndOpen(el);
   }
 
   start() {
