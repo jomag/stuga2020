@@ -11,7 +11,8 @@
     "xterm-webfont": "^2.0.0"
   },
   "scripts": {
-    "start": "webpack-dev-server --open --host 0.0.0.0",
+    "start": "webpack-dev-server --open",
+    "start-docker" : "webpack-dev-server --open --host 0.0.0.0",
     "build": "webpack --config webpack.config.js"
   },
   "devDependencies": {
