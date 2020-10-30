@@ -228,6 +228,11 @@ class BasicTerminal {
         await this.print('\n');
         return text;
       },
+      waitForInput: async (timeout: number) => {
+        // FIXME: Quick fix to not break the game too much.
+        // Waits indefinitely for input. See issue #11
+        return support.readLine(0);
+      },
     };
 
     const env = setupEnvironment('', support);
