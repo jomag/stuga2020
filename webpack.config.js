@@ -9,30 +9,34 @@ module.exports = {
     rules: [
       {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
+        use: ['style-loader', 'css-loader']
       },
       {
         test: /\.ts$/,
         use: 'ts-loader',
-        exclude: /node_modules/,
+        exclude: /node_modules/
       },
-    ],
+      {
+        test: /\.ans$/i,
+        use: 'raw-loader'
+      }
+    ]
   },
   devServer: {
-    contentBase: './dist',
+    contentBase: './dist'
   },
   resolve: {
-    extensions: ['.ts', '.js'],
+    extensions: ['.ts', '.js']
   },
   plugins: [
     new HtmlPlugin({
       title: 'Stuga 2020',
-      template: './src/index.html',
+      template: './src/index.html'
     }),
-    new CopyPlugin([{ from: './assets' }, { from: './stuga/stuga.bas' }]),
+    new CopyPlugin([{ from: './assets' }, { from: './stuga/stuga.baxs' }])
   ],
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist'),
-  },
+    path: path.resolve(__dirname, 'dist')
+  }
 };

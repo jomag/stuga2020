@@ -1,20 +1,57 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <Terminal />
+    <Menu v-bind:items="buildMenuItems()" v-on:selection="onMenuSelection" />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import HelloWorld from "./components/HelloWorld.vue";
+import Vue from 'vue';
+import Terminal from './components/Terminal.vue';
+import Menu from './components/Menu.vue';
 
-@Component({
+const App = Vue.extend({
   components: {
-    HelloWorld
+    Terminal,
+    Menu
+  },
+
+  data: function() {
+    return {
+      allCaps: true
+    };
+  },
+
+  methods: {
+    onMenuSelection(id: string) {
+      if (id === 'toggle-all-caps') {
+        this.allCaps = !this.allCaps;
+      }
+    },
+
+    buildMenuItems() {
+      return [
+        {
+          id: 'about-stuga',
+          label: 'About Stuga',
+          icon: 'university'
+        },
+        {
+          id: 'about-stuga-org',
+          label: 'About stugan.org',
+          icon: 'info'
+        },
+        {
+          id: 'toggle-all-caps',
+          label: this.allCaps ? 'ALL CAPS: Enabled' : 'ALL CAPS: Disabled',
+          icon: 'keyboard'
+        }
+      ];
+    }
   }
-})
-export default class App extends Vue {}
+});
+
+export default App;
 </script>
 
 <style>
@@ -22,8 +59,14 @@ export default class App extends Vue {}
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+
+  height: 100vh;
+  background: #000;
+  margin: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
 }
 </style>
