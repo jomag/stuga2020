@@ -33,7 +33,10 @@ module.exports = {
       title: 'Stuga 2020',
       template: './src/index.html'
     }),
-    new CopyPlugin([{ from: './assets' }, { from: './stuga/stuga.baxs' }])
+    new CopyPlugin([
+      { from: './assets', to: './public' },
+      { from: './stuga/stuga.baxs', to: './public' }
+    ])
   ],
   output: {
     filename: 'bundle.js',

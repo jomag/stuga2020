@@ -53,8 +53,8 @@ class BasicTerminal {
         brightRed: '#ff5555',
         brightMagenta: '#ff55ff',
         brightYellow: '#ffff55',
-        brightWhite: '#ffffff',
-      },
+        brightWhite: '#ffffff'
+      }
     };
 
     this.term = new Terminal(termOptions);
@@ -203,8 +203,12 @@ class BasicTerminal {
     const forcedChalk = new chalk.constructor(chalkOptions);
 
     const support = {
-      finalize: () => {},
-      open: async (filename: string, mode: string, channel: number) => {},
+      finalize: () => {
+        // empty
+      },
+      open: async (filename: string, mode: string, channel: number) => {
+        // empty
+      },
       close: async (channel: number) => {
         /* do nothing */
       },
@@ -225,7 +229,7 @@ class BasicTerminal {
         // FIXME: Quick fix to not break the game too much.
         // Waits indefinitely for input. See issue #11
         return support.readLine(0);
-      },
+      }
     };
 
     const env = setupEnvironment('', support);
