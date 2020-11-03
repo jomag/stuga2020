@@ -2,15 +2,7 @@ import { Terminal, ITerminalOptions } from 'xterm';
 import * as XtermWebfont from 'xterm-webfont';
 
 import { FitAddon } from 'xterm-addon-fit';
-import {
-  Stream,
-  Program,
-  Context,
-  setupEnvironment,
-  shell,
-  parse,
-  BaseSupport,
-} from 'bajsic';
+import { Program, Context, setupEnvironment, shell, parse } from 'bajsic';
 import chalk from 'chalk';
 import 'xterm/css/xterm.css';
 
@@ -32,14 +24,13 @@ class BasicTerminal {
 
   constructor(options?: BasicTerminalOptions) {
     const { cols, rows } = options || {};
-    let inputBuf = '';
 
     this.slowDownDelay = 0;
     this.slowDownBatch = 3;
 
     const termOptions: ITerminalOptions = {
-      // cols,
-      // rows,
+      cols,
+      rows,
       cursorBlink: true,
       cursorStyle: 'underline',
       fontFamily: 'px437_ibm_ega8regular',
@@ -62,8 +53,8 @@ class BasicTerminal {
         brightRed: '#ff5555',
         brightMagenta: '#ff55ff',
         brightYellow: '#ffff55',
-        brightWhite: '#ffffff',
-      },
+        brightWhite: '#ffffff'
+      }
     };
 
     this.term = new Terminal(termOptions);
@@ -208,13 +199,19 @@ class BasicTerminal {
   }
 
   start() {
-    let chalkOptions: any = { enabled: true, level: 2 };
+    const chalkOptions: any = { enabled: true, level: 2 };
     const forcedChalk = new chalk.constructor(chalkOptions);
 
     const support = {
-      finalize: () => {},
-      open: async (filename: string, mode: string, channel: number) => {},
-      close: async (channel: number) => {},
+      finalize: () => {
+        // empty
+      },
+      open: async (filename: string, mode: string, channel: number) => {
+        // empty
+      },
+      close: async (channel: number) => {
+        /* do nothing */
+      },
       print: async (channel: number, value: string) => {
         const value2 = value.replace(/\n/g, '\n\r');
         await this.print(value2);
@@ -232,7 +229,7 @@ class BasicTerminal {
         // FIXME: Quick fix to not break the game too much.
         // Waits indefinitely for input. See issue #11
         return support.readLine(0);
-      },
+      }
     };
 
     const env = setupEnvironment('', support);
@@ -240,11 +237,11 @@ class BasicTerminal {
     this.context = env.context;
 
     fetch('/stuga.bas')
-      .then((r: any) => {
+      .then((r: Response) => {
         console.log(r);
         return r.text();
       })
-      .then((r: any) => {
+      .then((r: string) => {
         this.program = parse(r);
       })
       .then(() => shell(this.program!, this.context!))

@@ -39,9 +39,8 @@ const startAnimation = async (term: BasicTerminal) => {
 };
 
 const showIntroduction = async (term: BasicTerminal) => {
-  const introResponse = await fetch('/STUGA.ANS');
-  const intro = await introResponse.text();
-  await term.print(intro);
+  const intro = require('@/assets/stuga.ans');
+  await term.print('intro');
 };
 
 document.addEventListener('DOMContentLoaded', () => {
