@@ -14,7 +14,7 @@ type BasicTerminalOptions = {
 const moveLeft = '\x1B[D';
 const moveRight = '\x1B[C';
 
-class BasicTerminal {
+class BasicXTerm {
   term: Terminal;
   program?: Program;
   context?: Context;
@@ -275,4 +275,4 @@ class BasicTerminal {
   }
 }
 
-export default BasicTerminal;
+export default BasicXTerm;
