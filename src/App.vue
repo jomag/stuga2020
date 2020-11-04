@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Terminal />
+    <Terminal v-bind:autorun="true" v-bind:allCaps="allCaps" />
     <Menu v-bind:items="buildMenuItems()" v-on:selection="onMenuSelection" />
   </div>
 </template>

@@ -37,5 +37,8 @@
     "raw-loader": "^4.0.2",
     "style-loader": "^1.1.2",
     "ts-loader": "^6.2.1"
+  },
+  "resolutions": {
+    "eslint-loader": "2.1.2"
   }
 }

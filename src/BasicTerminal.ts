@@ -2,7 +2,7 @@ import { Terminal, ITerminalOptions } from 'xterm';
 import * as XtermWebfont from 'xterm-webfont';
 
 import { FitAddon } from 'xterm-addon-fit';
-import { Program, Context, setupEnvironment, shell, parse } from 'bajsic';
+import { Program, Context, setupEnvironment, shell, parse, run } from 'bajsic';
 import chalk from 'chalk';
 import 'xterm/css/xterm.css';
 
@@ -21,6 +21,8 @@ class BasicTerminal {
   fitAddon?: FitAddon;
   slowDownDelay: number;
   slowDownBatch: number;
+  inputBuffer: string[] = [];
+  allCaps = false;
 
   constructor(options?: BasicTerminalOptions) {
     const { cols, rows } = options || {};
@@ -61,14 +63,14 @@ class BasicTerminal {
     this.fitAddon = new FitAddon();
     this.term.loadAddon(this.fitAddon);
     this.term.loadAddon(new XtermWebfont());
-
-    //this.term.onData((text: string) => {
-    //  this.term.write(text);
-    // });
   }
 
   fit() {
     this.fitAddon!.fit();
+  }
+
+  focus() {
+    this.term.focus();
   }
 
   async print(text: string): Promise<void> {
@@ -93,7 +95,18 @@ class BasicTerminal {
     }
   }
 
+  addInput(text: string) {
+    this.inputBuffer.push(text);
+  }
+
   async readInput() {
+    const inp = this.inputBuffer.shift();
+
+    if (inp !== undefined) {
+      this.print(inp + '\r\n');
+      return inp;
+    }
+
     let buf = '';
     let cursor = 0;
 
@@ -103,6 +116,10 @@ class BasicTerminal {
       // (27), in which case it may be followed by escaped data
       // flow characters.
       const listener = this.term.onData((data: string) => {
+        if (this.allCaps) {
+          data = data.toUpperCase();
+        }
+
         const code = data.charCodeAt(0);
 
         switch (code) {
@@ -244,10 +261,17 @@ class BasicTerminal {
       .then((r: string) => {
         this.program = parse(r);
       })
+      .then(() => {
+        return run(this.program!, this.context!);
+      })
       .then(() => shell(this.program!, this.context!))
       .catch((e: Error) => {
         support.printError(e.toString());
       });
+  }
+
+  setAllCaps(value: boolean) {
+    this.allCaps = value;
   }
 }
 
