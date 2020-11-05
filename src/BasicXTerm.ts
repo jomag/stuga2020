@@ -73,6 +73,10 @@ class BasicXTerm {
     this.term.focus();
   }
 
+  dispose() {
+    this.term.dispose();
+  }
+
   async print(text: string): Promise<void> {
     if (this.slowDownDelay === 0) {
       this.term.write(text);
@@ -216,6 +220,7 @@ class BasicXTerm {
   }
 
   start() {
+    console.log('START!');
     const chalkOptions: any = { enabled: true, level: 2 };
     const forcedChalk = new chalk.constructor(chalkOptions);
 
@@ -253,6 +258,7 @@ class BasicXTerm {
     this.program = env.program;
     this.context = env.context;
 
+    console.log('FETCHING!');
     fetch('/stuga.bas')
       .then((r: Response) => {
         console.log(r);
