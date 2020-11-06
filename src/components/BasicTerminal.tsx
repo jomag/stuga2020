@@ -13,7 +13,6 @@ const BasicTerminal = ({ allCaps }: Props) => {
     if (ref.current !== null) {
       term.current = new BasicXTerm({ cols: 80, rows: 25 });
       term.current.open(ref.current).then(() => {
-        console.log('ERPOHJKHHHHH', term.current);
         term.current?.start();
         term.current?.fit();
         term.current?.focus();
@@ -26,7 +25,6 @@ const BasicTerminal = ({ allCaps }: Props) => {
   }, []);
 
   useEffect(() => {
-    console.log('ALL CAPS CHANGED!');
     term.current?.setAllCaps(!!allCaps);
   }, [allCaps]);
 
