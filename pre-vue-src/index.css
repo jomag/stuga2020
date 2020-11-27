@@ -1,16 +1,3 @@
-html,
-body {
-  height: 100%;
-  margin: 0;
-}
-
-body {
-  background: #000;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  padding: 2px;
-}
-
 #app {
   background: red;
   padding: 32px;
