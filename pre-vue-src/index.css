@@ -1,8 +1,0 @@
-#app {
-  background: red;
-  padding: 32px;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}
