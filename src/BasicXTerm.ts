@@ -14,7 +14,7 @@ type BasicTerminalOptions = {
 const moveLeft = '\x1B[D';
 const moveRight = '\x1B[C';
 
-class BasicTerminal {
+class BasicXTerm {
   term: Terminal;
   program?: Program;
   context?: Context;
@@ -71,6 +71,10 @@ class BasicTerminal {
 
   focus() {
     this.term.focus();
+  }
+
+  dispose() {
+    this.term.dispose();
   }
 
   async print(text: string): Promise<void> {
@@ -216,6 +220,7 @@ class BasicTerminal {
   }
 
   start() {
+    console.log('START!');
     const chalkOptions: any = { enabled: true, level: 2 };
     const forcedChalk = new chalk.constructor(chalkOptions);
 
@@ -253,6 +258,7 @@ class BasicTerminal {
     this.program = env.program;
     this.context = env.context;
 
+    console.log('FETCHING!');
     fetch('/stuga.bas')
       .then((r: Response) => {
         console.log(r);
@@ -275,4 +281,4 @@ class BasicTerminal {
   }
 }
 
-export default BasicTerminal;
+export default BasicXTerm;

@@ -2,27 +2,39 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
-    <title><%= htmlWebpackPlugin.options.title %></title>
-    <link rel="stylesheet" type="text/css" href="fonts/stylesheet.css" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Classic Swedish text adventure Stuga" />
+
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+
+    <title>Stuga</title>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-155993892-1"
+    ></script>
 
     <!-- Font Awesome -->
     <script
       src="https://kit.fontawesome.com/5cc011a31f.js"
       crossorigin="anonymous"
     ></script>
+
+    <!-- CSS with retro font -->
+    <link rel="stylesheet" type="text/css" href="fonts/stylesheet.css" />
+
+    <!-- Robot font -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <noscript>
-      <strong
-        >We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work
-        properly without JavaScript enabled. Please enable it to
-        continue.</strong
-      >
-    </noscript>
-    <div style="border: 1px solid blue" id="app"></div>
-    <!-- built files will be auto injected -->
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
   </body>
 </html>
