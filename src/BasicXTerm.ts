@@ -201,7 +201,7 @@ class BasicXTerm {
           default:
             if (cursor === buf.length) {
               buf = buf + data;
-              this.term.write(data);
+              this.term.write(`\x1B[97m${data}\x1B[0m`);
             } else {
               const tail = data + buf.substr(cursor);
               this.term.write(tail);
