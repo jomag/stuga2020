@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 
 import BasicTerminal from './components/BasicTerminal';
-import Menu from './components/Menu';
+import Menu, { MenuItem } from './components/Menu';
 import Modal from './components/Modal';
 import './App.css';
+import screenfull from 'screenfull';
 
 function App() {
   const [allCaps, setAllCaps] = useState(true);
   const [aboutStugaOpen, showAboutStuga] = useState(false);
+  const [isFullscreen, setFullscreen] = useState(false);
 
   const buildMenuItems = () => {
-    return [
+    const items: MenuItem[] = [
       {
         id: 'about-stuga',
         label: 'About Stuga',
@@ -22,6 +24,26 @@ function App() {
         icon: 'keyboard'
       }
     ];
+
+    if (screenfull.isEnabled) {
+      items.push({
+        id: 'fullscreen',
+        label: isFullscreen ? 'Leave fullscreen' : 'Enter fullscreen',
+        icon: isFullscreen ? 'compress' : 'expand',
+        onSelection: () => {
+          if (screenfull.isEnabled) {
+            if (isFullscreen) {
+              screenfull.exit();
+            } else {
+              screenfull.request();
+            }
+          }
+          setFullscreen(!isFullscreen);
+        }
+      });
+    }
+
+    return items;
   };
 
   const handleSelection = (id: string) => {

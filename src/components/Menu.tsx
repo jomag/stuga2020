@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 
-interface MenuItem {
+export interface MenuItem {
   id: string;
   label: string;
   icon: string;
+  onSelection?: () => void;
 }
 
 type Props = {
@@ -14,9 +15,10 @@ type Props = {
 const Menu = ({ items, onSelection }: Props) => {
   const [expanded, setExpanded] = useState(false);
 
-  const handleSelection = (id: string) => {
+  const handleSelection = (item: MenuItem) => {
     setExpanded(false);
-    onSelection(id);
+    item.onSelection && item.onSelection();
+    onSelection(item.id);
   };
 
   const toggle = () => {
@@ -32,7 +34,7 @@ const Menu = ({ items, onSelection }: Props) => {
       </div>
       <ul id="menu-list" className={expanded ? 'open' : ''}>
         {items.map(item => (
-          <li key={item.id} onClick={() => handleSelection(item.id)}>
+          <li key={item.id} onClick={() => handleSelection(item)}>
             <div className="menu-label">{item.label}</div>
             <div className="menu-item">
               <div className="menu-icon">
