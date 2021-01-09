@@ -56,6 +56,7 @@ function App() {
       fitAddon.current.fit();
       await basicAddon.current.load('/stuga.bas');
       await basicAddon.current.run();
+      await basicAddon.current.shell();
     };
 
     setupAddons();

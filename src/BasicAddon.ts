@@ -74,11 +74,19 @@ export class BasicAddon implements ITerminalAddon {
   }
 
   async run() {
-    return run(this.program, this.context);
+    try {
+      return await run(this.program, this.context);
+    } catch (error) {
+      this.printError(error.toString());
+    }
   }
 
   async shell() {
-    return shell(this.program, this.context);
+    try {
+      return await shell(this.program, this.context);
+    } catch (error) {
+      this.printError(error.toString());
+    }
   }
 
   async print(text: string): Promise<void> {
