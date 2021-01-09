@@ -1,15 +1,65 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { ITerminalOptions, ITerminalAddon } from 'xterm';
+import { FitAddon } from 'xterm-addon-fit';
 
-import BasicTerminal from './components/BasicTerminal';
+import XTermWrapper from './components/XTermWrapper';
 import Menu, { MenuItem } from './components/Menu';
 import Modal from './components/Modal';
 import './App.css';
 import screenfull from 'screenfull';
+import { BasicAddon } from './BasicAddon';
+
+const termOptions: ITerminalOptions = {
+  cols: 80,
+  rows: 25,
+  cursorBlink: true,
+  cursorStyle: 'underline',
+  fontFamily: 'px437_ibm_ega8regular',
+  fontSize: 16,
+  // lineHeight: 0.95,
+  rendererType: 'canvas',
+  theme: {
+    foreground: '#ddd',
+    blue: '#0000aa',
+    green: '#00aa00',
+    cyan: '#00aaaa',
+    red: '#aa0000',
+    magenta: '#aa00aa',
+    yellow: '#aa5500',
+    white: '#aaaaaa',
+    brightBlack: '#555555',
+    brightBlue: '#5555ff',
+    brightGreen: '#55ff55',
+    brightCyan: '#55ffff',
+    brightRed: '#ff5555',
+    brightMagenta: '#ff55ff',
+    brightYellow: '#ffff55',
+    brightWhite: '#ffffff'
+  }
+};
 
 function App() {
   const [allCaps, setAllCaps] = useState(true);
   const [aboutStugaOpen, showAboutStuga] = useState(false);
   const [isFullscreen, setFullscreen] = useState(false);
+
+  const fitAddon = useRef(new FitAddon());
+  const basicAddon = useRef(new BasicAddon());
+  const addons = useRef(
+    new Array<ITerminalAddon>(fitAddon.current, basicAddon.current)
+  );
+
+  basicAddon.current.allCaps = allCaps;
+
+  useEffect(() => {
+    const setupAddons = async () => {
+      fitAddon.current.fit();
+      await basicAddon.current.load('/stuga.bas');
+      await basicAddon.current.run();
+    };
+
+    setupAddons();
+  }, []);
 
   const buildMenuItems = () => {
     const items: MenuItem[] = [
@@ -58,8 +108,14 @@ function App() {
 
   return (
     <div id="app">
-      <BasicTerminal allCaps={allCaps}></BasicTerminal>
+      <XTermWrapper
+        id="term-container"
+        addons={addons.current}
+        options={termOptions}
+      ></XTermWrapper>
+
       <Menu items={buildMenuItems()} onSelection={handleSelection}></Menu>
+
       <Modal
         title="Welcome to the world of Stuga!"
         open={aboutStugaOpen}
