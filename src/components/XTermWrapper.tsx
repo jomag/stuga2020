@@ -9,9 +9,17 @@ interface IProps {
   key?: React.Key;
   options?: ITerminalOptions;
   addons?: Array<ITerminalAddon>;
+  onInitialized?: () => void;
 }
 
-const XTermWrapper = ({ options, addons, className, id, key }: IProps) => {
+const XTermWrapper = ({
+  options,
+  addons,
+  className,
+  id,
+  key,
+  onInitialized
+}: IProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const term = useRef<Terminal | null>(null);
 
@@ -27,6 +35,8 @@ const XTermWrapper = ({ options, addons, className, id, key }: IProps) => {
 
       await (term.current! as any).loadWebfontAndOpen(ref.current!);
       term.current!.focus();
+
+      onInitialized && onInitialized();
     };
 
     createTerminal();

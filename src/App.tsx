@@ -51,16 +51,12 @@ function App() {
 
   basicAddon.current.allCaps = allCaps;
 
-  useEffect(() => {
-    const setupAddons = async () => {
-      fitAddon.current.fit();
-      await basicAddon.current.load('/stuga.bas');
-      await basicAddon.current.run();
-      await basicAddon.current.shell();
-    };
-
-    setupAddons();
-  }, []);
+  const onTermInitialized = async () => {
+    fitAddon.current.fit();
+    await basicAddon.current.load('/stuga.bas');
+    await basicAddon.current.run();
+    await basicAddon.current.shell();
+  };
 
   const buildMenuItems = () => {
     const items: MenuItem[] = [
@@ -107,12 +103,23 @@ function App() {
     }
   };
 
+  // Handle resize
+  useEffect(() => {
+    const onResize = () => {
+      fitAddon.current.fit();
+    };
+
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  });
+
   return (
     <div id="app">
       <XTermWrapper
         id="term-container"
         addons={addons.current}
         options={termOptions}
+        onInitialized={onTermInitialized}
       ></XTermWrapper>
 
       <Menu items={buildMenuItems()} onSelection={handleSelection}></Menu>
