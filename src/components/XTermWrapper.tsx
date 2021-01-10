@@ -45,7 +45,7 @@ const XTermWrapper = ({
       term.current?.dispose();
       term.current = null;
     };
-  }, [addons, options]);
+  }, [addons, options, onInitialized]);
 
   return <div className={className} id={id} key={key} ref={ref}></div>;
 };
