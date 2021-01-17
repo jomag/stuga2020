@@ -53,9 +53,14 @@ function App() {
 
   const onTermInitialized = async () => {
     fitAddon.current.fit();
-    await basicAddon.current.load('/stuga.bas');
-    await basicAddon.current.run();
-    await basicAddon.current.shell();
+
+    if (window.location.pathname === '/repl') {
+      await basicAddon.current.shell();
+    } else {
+      await basicAddon.current.load('/stuga.bas');
+      await basicAddon.current.run();
+      await basicAddon.current.shell();
+    }
   };
 
   const buildMenuItems = () => {
