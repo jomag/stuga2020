@@ -9,18 +9,40 @@ import {
 } from 'bajsic';
 import { Terminal, ITerminalAddon } from 'xterm';
 import chalk from 'chalk';
+import { once, EventEmitter } from 'events';
 
 const moveLeft = '\x1B[D';
 const moveRight = '\x1B[C';
 
 export class BasicAddon implements ITerminalAddon {
-  terminal?: Terminal;
   support: BaseSupport;
   program: Program;
   context: Context;
-  inputBuffer: string[] = [];
   allCaps: boolean = true;
-  forcedChalk = new chalk.constructor({
+
+  private terminal?: Terminal;
+
+  // Listener for terminal.onData()
+  private inputListener: any;
+
+  // Contains characters received. On newline, the content
+  // is appended to inputBuffer, onInput event is emitted
+  // and input is emptied.
+  private partialInput: string = '';
+
+  // Unconsumed inputs
+  private inputBuffer: string[] = [];
+
+  private emitter: EventEmitter;
+
+  // Readline mode is activated while waiting for input
+  // (typically the INPUT statement). In this mode, input
+  // handling is a bit more intelligent, allowing to move
+  // cursor, go back in history etc
+  private readlineMode: boolean = false;
+  private cursor: number = 0;
+
+  private forcedChalk = new chalk.constructor({
     enabled: true,
     level: 2
   });
@@ -40,24 +62,180 @@ export class BasicAddon implements ITerminalAddon {
         const value2 = value.replace(/\n/g, '\n\r');
         await this.print(value2);
       },
+      printError: async (message: string) => {
+        const message2 = message.replace(/\n/g, '\n\r');
+        await this.print(this.forcedChalk.redBright(message2) + '\n\r');
+      },
       readLine: async (channel: number) => {
         const text = await this.readInput();
-        await this.print('\n');
+        await this.print('\n\r');
         return text;
+      },
+      clearInputBuffer: () => {
+        this.inputBuffer = [];
+      },
+      waitForInput: async (timeout: number) => {
+        const res = await this.waitForInput(timeout);
+        return res;
       }
     };
 
     const { program, context } = setupEnvironment('', this.support);
     this.program = program;
     this.context = context;
+    this.emitter = new EventEmitter();
   }
 
   activate(terminal: Terminal): void {
     this.terminal = terminal;
+    this.inputListener = terminal.onData(this.handleInput.bind(this));
   }
 
   dispose(): void {
     this.terminal = undefined;
+    this.inputListener.dispose();
+  }
+
+  handleInputReadlineMode(data: string) {
+    // This code assumes that the data received is a single
+    // character string, unless the first character is escape
+    // (27), in which case it may be followed by escaped data
+    // flow characters.
+    if (this.allCaps) {
+      data = data.toUpperCase();
+    }
+
+    const code = data.charCodeAt(0);
+
+    switch (code) {
+      case 27:
+        // Escape character, that is typically followed by escaped
+        // data flow characters
+        switch (data.substr(1)) {
+          case '[A':
+            // Up arrow: should go back in history
+            break;
+
+          case '[B':
+            // Down arrow: should go forward in history
+            break;
+
+          case '[3~':
+            // Delete
+            break;
+
+          case '[F':
+            // End
+            this.terminal?.write(
+              moveRight.repeat(this.partialInput.length - this.cursor)
+            );
+            this.cursor = this.partialInput.length;
+            break;
+
+          case '[H':
+            // Home
+            this.terminal?.write(moveLeft.repeat(this.cursor));
+            this.cursor = 0;
+            break;
+
+          case '[C':
+            // Right arrow
+            if (this.cursor < this.partialInput.length) {
+              this.cursor++;
+              this.terminal?.write(data);
+            }
+            break;
+
+          case '[D':
+            // Left arrow
+            if (this.cursor > 0) {
+              this.cursor--;
+              this.terminal?.write(data);
+            }
+            break;
+
+          default:
+            console.log(`Unhandled escape code: ${data.substr(1)}"`);
+            break;
+        }
+        break;
+
+      case 13:
+        this.terminal?.write(data);
+        this.inputBuffer.push(this.partialInput);
+        this.partialInput = '';
+        this.cursor = 0;
+        this.emitter.emit('input');
+        break;
+
+      case 127:
+        // Backspace
+        if (this.cursor > 0) {
+          if (this.cursor === this.partialInput.length) {
+            this.partialInput = this.partialInput.substr(
+              0,
+              this.partialInput.length - 1
+            );
+            this.cursor--;
+            this.terminal?.write(`${moveLeft} ${moveLeft}`);
+          } else {
+            this.terminal?.write(moveLeft);
+            this.terminal?.write(this.partialInput.substr(this.cursor) + ' ');
+            this.terminal?.write(
+              moveLeft.repeat(this.partialInput.length - this.cursor + 1)
+            );
+            this.partialInput =
+              this.partialInput.substr(0, this.cursor - 1) +
+              this.partialInput.substr(this.cursor);
+            this.cursor--;
+          }
+        }
+        break;
+
+      default:
+        if (this.cursor === this.partialInput.length) {
+          this.partialInput += data;
+          this.terminal?.write(`\x1B[97m${data}\x1B[0m`);
+        } else {
+          const tail = data + this.partialInput.substr(this.cursor);
+          this.terminal?.write(tail);
+          this.terminal?.write('\x1B[D'.repeat(tail.length - 1));
+          this.partialInput = this.partialInput.substr(0, this.cursor) + tail;
+        }
+        this.cursor += data.length;
+        break;
+    }
+  }
+
+  handleInput(data: string) {
+    if (this.readlineMode) {
+      this.handleInputReadlineMode(data);
+      return;
+    }
+
+    if (this.allCaps) {
+      data = data.toUpperCase();
+    }
+
+    switch (data.charCodeAt(0)) {
+      case 13:
+        this.terminal?.write(data);
+        this.inputBuffer.push(this.partialInput);
+        this.partialInput = '';
+        this.emitter.emit('input');
+        break;
+
+      case 27:
+        const escaped = `^[${data.substr(1)}`;
+        this.partialInput += escaped;
+        this.terminal?.write(escaped);
+        break;
+
+      default:
+        this.partialInput += data;
+        this.terminal?.write(data);
+        break;
+    }
   }
 
   async load(url: string) {
@@ -66,7 +244,7 @@ export class BasicAddon implements ITerminalAddon {
     try {
       this.program = parse(await res.text());
     } catch (error) {
-      this.printError(error.toString());
+      this.support.printError(error.toString());
     }
 
     const { context } = setupEnvironment('', this.support);
@@ -77,7 +255,7 @@ export class BasicAddon implements ITerminalAddon {
     try {
       return await run(this.program, this.context);
     } catch (error) {
-      this.printError(error.toString());
+      this.support.printError(error.toString());
     }
   }
 
@@ -85,7 +263,7 @@ export class BasicAddon implements ITerminalAddon {
     try {
       return await shell(this.program, this.context);
     } catch (error) {
-      this.printError(error.toString());
+      this.support.printError(error.toString());
     }
   }
 
@@ -98,131 +276,40 @@ export class BasicAddon implements ITerminalAddon {
   }
 
   async readInput() {
-    const term = this.terminal;
+    this.readlineMode = true;
 
-    if (!term) {
-      return;
+    while (true) {
+      const inp = this.inputBuffer.shift();
+
+      if (inp !== undefined) {
+        this.readlineMode = false;
+        return inp;
+      }
+
+      await once(this.emitter, 'input');
     }
-
-    const inp = this.inputBuffer.shift();
-
-    if (inp !== undefined) {
-      this.print(inp + '\r\n');
-      return inp;
-    }
-
-    let buf = '';
-    let cursor = 0;
-
-    return new Promise<string>((resolve: any, reject: any) => {
-      // This code assumes that the data received is a single
-      // character string, unless the first character is escape
-      // (27), in which case it may be followed by escaped data
-      // flow characters.
-      const listener = term.onData((data: string) => {
-        if (this.allCaps) {
-          data = data.toUpperCase();
-        }
-
-        const code = data.charCodeAt(0);
-
-        switch (code) {
-          case 27:
-            switch (data.substr(1)) {
-              case '[A':
-                // Up arrow: should go back in history
-                break;
-
-              case '[B':
-                // Down arrow: should go forward in history
-                break;
-
-              case '[3~':
-                // Delete
-                term.write('SORRY DELETE KEY IS NOT YET HANDLED!');
-                break;
-
-              case '[F':
-                // End
-                term.write(moveRight.repeat(buf.length - cursor));
-                cursor = buf.length;
-                break;
-
-              case '[H':
-                // Home
-                term.write(moveLeft.repeat(cursor));
-                cursor = 0;
-                break;
-
-              case '[C':
-                // Right arrow
-                if (cursor < buf.length) {
-                  cursor++;
-                  term.write(data);
-                }
-                break;
-
-              case '[D':
-                // Left arrow
-                if (cursor > 0) {
-                  cursor--;
-                  term.write(data);
-                }
-                break;
-
-              default:
-                term.write(`ESC "${data.substr(1)}"`);
-            }
-            break;
-
-          case 13:
-            term.write(data);
-            listener.dispose();
-            resolve(buf);
-            break;
-
-          case 127:
-            // Backspace
-            if (cursor > 0) {
-              if (cursor === buf.length) {
-                buf = buf.substr(0, buf.length - 1);
-                cursor--;
-                term.write(`${moveLeft} ${moveLeft}`);
-              } else {
-                term.write(moveLeft);
-                term.write(buf.substr(cursor) + ' ');
-                term.write(moveLeft.repeat(buf.length - cursor + 1));
-                buf = buf.substr(0, cursor - 1) + buf.substr(cursor);
-                cursor--;
-              }
-            }
-            break;
-
-          default:
-            if (cursor === buf.length) {
-              buf = buf + data;
-              term.write(`\x1B[97m${data}\x1B[0m`);
-            } else {
-              const tail = data + buf.substr(cursor);
-              term.write(tail);
-              term.write('\x1B[D'.repeat(tail.length - 1));
-              buf = buf.substr(0, cursor) + tail;
-            }
-            cursor += data.length;
-            break;
-        }
-      });
-    });
-  }
-
-  async printError(message: string) {
-    const message2 = message.replace(/\n/g, '\n\r');
-    await this.print(this.forcedChalk.redBright(message2) + '\n\r');
   }
 
   async waitForInput(timeout: number) {
-    // FIXME: Quick fix to not break the game too much.
-    // Waits indefinitely for input. See issue #11
-    return this.support?.readLine(0);
+    console.log('Wait for input: ', timeout);
+    if (this.inputBuffer.length > 0) {
+      return 1;
+    }
+
+    return new Promise(resolve => {
+      const handleInput = () => {
+        console.log('INPUT: ', this.inputBuffer);
+        clearTimeout(id);
+        resolve(1);
+      };
+
+      this.emitter.once('input', handleInput);
+
+      const id = setTimeout(() => {
+        console.log('Timeout!');
+        this.emitter.removeListener('input', handleInput);
+        resolve(0);
+      }, timeout);
+    });
   }
 }
